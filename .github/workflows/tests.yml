@@ -1,0 +1,23 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # Only the fast, synthetic-data correctness tests run in CI. The real
+      # NFCorpus + local-LLM experiment (scripts/) downloads a dataset and a
+      # ~3GB model and takes several minutes on a laptop GPU; it's meant to
+      # be run locally, not on every push.
+      - name: Install dependencies
+        run: pip install rank_bm25 scikit-learn lightgbm pandas numpy pytest
+      - name: Run correctness tests (synthetic data only)
+        run: PYTHONPATH=. pytest tests/ -v

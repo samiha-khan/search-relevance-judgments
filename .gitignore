@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+*.egg-info/
+.ir_datasets/
+data/
+*.cache/
+*_log.txt
+*_err.txt
+judge_validation_results.txt
