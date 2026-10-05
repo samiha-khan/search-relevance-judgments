@@ -11,8 +11,6 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass
 
-import ir_datasets
-
 
 @dataclass
 class Corpus:
@@ -22,6 +20,12 @@ class Corpus:
 
 
 def load_nfcorpus(split: str = "test") -> Corpus:
+    # Imported lazily: ir_datasets is only needed for this real-data path,
+    # not for the Corpus dataclass or the pure logic below, which is all
+    # the synthetic-data test suite exercises. A module-level import here
+    # would force CI to install it even though no test calls this function.
+    import ir_datasets
+
     docs_ds = ir_datasets.load("beir/nfcorpus")
     split_ds = ir_datasets.load(f"beir/nfcorpus/{split}")
 
